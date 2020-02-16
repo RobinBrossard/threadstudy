@@ -3,19 +3,28 @@ package com.robin.lib;
 
 
 import javax.swing.*;
+import java.awt.*;
 
 
 public class Ballgame {
     public Ballgame(){
         JFrame f=new JFrame("小球游戏");
-        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        //Frame f=new Frame("小球游戏");//建立框架
-        GamePanel mp=new GamePanel();//建立绘图容器
-
         f.setLocation(300,100);
-        f.setSize(300,300);
-        f.add(mp);//将GamePanel对象添加到Frame对象中去
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        f.setLayout(new BorderLayout());
+        f.setResizable(false);
+
+        GamePanel mp=new GamePanel();//建立绘图容器
+        mp.setPreferredSize(new Dimension(300,300));
+        mp.setLayout(new BorderLayout());
+
+
+        f.add(mp,BorderLayout.CENTER);
+
         f.setVisible(true);
+        f.pack();
+
+
         new Thread(mp).start();
 
     }
