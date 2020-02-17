@@ -6,8 +6,22 @@ import java.awt.*;
 
 
 public class Ballgame {
-    public Ballgame() {
-        JFrame f = new JFrame("小球游戏");
+    private static Ballgame instance;
+
+    static {
+        try {
+            instance = new Ballgame();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Ballgame getInstance(){
+        return instance;
+    }
+
+    private Ballgame() throws InterruptedException {
+        JFrame f = new JFrame("PingPong Game");
         f.setLocation(300, 100);
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         f.setLayout(new BorderLayout());

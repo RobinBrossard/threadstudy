@@ -33,14 +33,30 @@ public class GamePanel extends JPanel implements Runnable {
         this.scoreB = scoreB;
     }
 
+    public int getScoreA() {
+        return scoreA;
+    }
+
+    public int getScoreB() {
+        return scoreB;
+    }
+
     private int scoreA = 0;
     private int scoreB = 0;
+
+    public Ballclass getBall() {
+        return ball;
+    }
+
+    public StudentAI getPlayer() {
+        return player;
+    }
 
     Ballclass ball;
     StudentAI player;
 
 
-    public GamePanel()//构造函数，初始化各个变量
+    public GamePanel() throws InterruptedException//构造函数，初始化各个变量
     {
         //设定球场大小
         this.setPreferredSize(new Dimension(playgroundwidth, playgroundhigh));
@@ -48,8 +64,8 @@ public class GamePanel extends JPanel implements Runnable {
 
         //初始化小球
         if (ball == null) {
-            ball = new Ballclass();
-            ball.setSigma(-60); //初始化一下小球方向
+            ball = new Ballclass(this);
+            //  ball.setSigma(-60); //初始化一下小球方向
         }
 
         //初始位置，机器人
@@ -58,7 +74,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         //初始化玩家
         if (player == null) {
-            player = new StudentAI();
+            player = new StudentAI(this);
 
         }
 
@@ -69,7 +85,9 @@ public class GamePanel extends JPanel implements Runnable {
         super.paint(g); //调用父类清屏，不然不会清屏
         //TODO: 画小球
         g.setColor(Color.BLUE);//设置画笔颜色为蓝色
+       if(ball.ilock==1) //小球轨迹计算中，会锁住
         g.fillOval(ball.x, ball.y, Ballclass.diameter, Ballclass.diameter);//调用画圆的方法绘制小球
+
         //TODO: 画机器人A
         g.setColor(Color.RED);
         g.fillRect(PlayA_x, PlayA_y, playerwidth, playerhigh);

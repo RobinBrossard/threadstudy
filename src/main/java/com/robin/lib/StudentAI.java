@@ -6,13 +6,15 @@ import java.awt.event.KeyListener;
 import java.io.IOException;
 
 public class StudentAI extends PersonalAI implements KeyListener {
-    Thread t;
+
     final static int minspeed = 0;
     final static int maxspeed = 10;
     final static int speedstep = 5;
     int speed = minspeed;
+    private GamePanel gp; //游戏盒子指针，用于数据传递
 
-    public StudentAI() {
+    public StudentAI(GamePanel tmp) {
+        gp=tmp;
         resetStudent();
     }
 

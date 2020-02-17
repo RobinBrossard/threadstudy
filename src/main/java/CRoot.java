@@ -14,8 +14,10 @@ public class CRoot {
         System.out.println("====== My test library ======");
 
 
-        Thread.sleep(2);
-        Ballgame bg = new Ballgame();
+
+        Ballgame bg = Ballgame.getInstance();
+        
+
 
 
         //    Exception e=new Exception("hi exception");
