@@ -2,19 +2,66 @@ package com.robin.lib;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class GamePanel extends JPanel implements Runnable {
-    private int x;//该变量表示小球左上角的横坐标
-    private int y;//该变量表示小球左上角的纵坐标
-    private int diameter;//该变量表示小球的直径
-    private int sleeptime;
+
+
+    private int PlayA_x; //机器人左上角横坐标
+    private int PlayA_y; //机器人左上角纵坐标
+
+
+    public void setPlayA_x(int playA_x) {
+        PlayA_x = playA_x;
+    }
+
+
+    final public static int playerwidth = 40;
+    public static final int playerhigh = 5;
+
+    final public static int bordlinehigh = 20;
+    final static public int playgroundwidth = 500;
+    final public static int playgroundhigh = 300;
+    final public static int sleeptime = 10;
+
+    public void setScoreA(int scoreA) {
+        this.scoreA = scoreA;
+    }
+
+    public void setScoreB(int scoreB) {
+        this.scoreB = scoreB;
+    }
+
+    private int scoreA = 0;
+    private int scoreB = 0;
+
+    Ballclass ball;
+    StudentAI player;
+
 
     public GamePanel()//构造函数，初始化各个变量
     {
-        x = 10;
-        y = 10;
-        diameter = 20;
-        sleeptime = 30;
+        //设定球场大小
+        this.setPreferredSize(new Dimension(playgroundwidth, playgroundhigh));
+        this.setLayout(new BorderLayout());
+
+        //初始化小球
+        if (ball == null) {
+            ball = new Ballclass();
+            ball.setSigma(-60); //初始化一下小球方向
+        }
+
+        //初始位置，机器人
+        PlayA_x = playgroundwidth / 2 - playerwidth / 2 - 1;
+        PlayA_y = bordlinehigh - 1;
+
+        //初始化玩家
+        if (player == null) {
+            player = new StudentAI();
+
+        }
+
 
     }
 
@@ -22,14 +69,20 @@ public class GamePanel extends JPanel implements Runnable {
         super.paint(g); //调用父类清屏，不然不会清屏
         //TODO: 画小球
         g.setColor(Color.BLUE);//设置画笔颜色为蓝色
-        g.fillOval(x, y, diameter, diameter);//调用画圆的方法绘制小球
+        g.fillOval(ball.x, ball.y, Ballclass.diameter, Ballclass.diameter);//调用画圆的方法绘制小球
         //TODO: 画机器人A
         g.setColor(Color.RED);
-        g.fillRect(0, 0, 40, 5);
+        g.fillRect(PlayA_x, PlayA_y, playerwidth, playerhigh);
 
-        //TODO: 画机器人B
+        //TODO: 画玩家
         g.setColor(Color.YELLOW);
-        g.fillRect(260, 295, 40, 5);
+        g.fillRect(player.x, player.y, playerwidth, playerhigh);
+
+        //TODO: 显示比分
+        g.setColor(Color.WHITE);
+        Font font = new Font(null, Font.BOLD, 30);
+        g.setFont(font);
+        g.drawString(scoreA + ":" + scoreB, playgroundwidth / 2 - 20, playgroundhigh / 2);
 
     }
 
@@ -39,14 +92,6 @@ public class GamePanel extends JPanel implements Runnable {
             while (true) {
                 Thread.sleep(sleeptime);
                 repaint();
-                x++;
-                y++;
-                if (x > 300) {
-                    x = 0;
-                }
-                if (y > 300) {
-                    y = 0;
-                }
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -61,4 +106,5 @@ public class GamePanel extends JPanel implements Runnable {
             e.printStackTrace();
         }
     }
+
 }

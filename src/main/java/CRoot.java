@@ -9,24 +9,19 @@ import java.awt.event.WindowEvent;
 public class CRoot {
 
 
-        public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 
-            System.out.println("====== My test library ======");
-
-
-            StudentAI astudent = new StudentAI();
-            new Thread(astudent).start();
-
-            Thread.sleep(2);
-            Ballgame bg=new Ballgame();
+        System.out.println("====== My test library ======");
 
 
+        Thread.sleep(2);
+        Ballgame bg = new Ballgame();
 
 
-            //    Exception e=new Exception("hi exception");
-            //    throw e; //throw 完了程序就结束了
+        //    Exception e=new Exception("hi exception");
+        //    throw e; //throw 完了程序就结束了
 
 
-        }
     }
+}
 
