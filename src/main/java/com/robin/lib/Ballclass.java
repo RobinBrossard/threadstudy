@@ -37,10 +37,10 @@ public class Ballclass implements Runnable {
     }
 
     private float sigma = -90; //球的运动方向，0 ~ 360度，极坐标，初始发球为向正下方
-    private static final int minSpeed = 1;
-    private static final int maxSpeed = 5;
+    private static final int minSpeed = 2;
+    private static final int maxSpeed = 6;
     private int speed = minSpeed; //球速
-    private static final int speedStep = 1;
+    private static final int speedStep = 2;
 
     private Thread t;
     private GamePanel gp; //游戏盒子指针，用于数据传递
@@ -124,14 +124,19 @@ public class Ballclass implements Runnable {
 
                     y = up_limit; //超出部分修正
                     //下面再修改运动角度
-                    sigma = -sigma;
-
-                    //增加娱乐性，上下碰撞会增加速度，但不超过最大速度
-                    if (speed < maxSpeed) {
-                        speed = speed + speedStep;
-                    }
-                    if (speed > maxSpeed) {
-                        speed = maxSpeed;
+                    //TODO: 需要查看当前computer位置，根据computer坐标，判断球出界或者角度转向
+                    float ipingpong = 0;
+                    ipingpong = pingpongComputer((int)x, gp.computer.getX(), gp.playerwidth, sigma, speed);
+                    if (ipingpong < 0) {
+                        this.setSigma(ipingpong);
+                        System.out.println("接球后sigma: " + sigma+" 球速: "+speed);
+                    } else { //球没有接到
+                        //对方比分+1；
+                        gp.setScoreA(gp.getScoreA() + 1);
+                        gp.computer.resetComputer();
+                        gp.player.resetStudent();
+                        Thread.sleep(1000);
+                        resetBall();
                     }
 
                     continue;
@@ -152,11 +157,15 @@ public class Ballclass implements Runnable {
                     if (ipingpong > 0) {
 
                         this.setSigma(ipingpong);
-                        System.out.println("接球后sigma：" + sigma);
+                        System.out.println("接球后sigma: " + sigma+" 球速: "+speed);
                     } else { //球没有接到
                         //对方比分+1；
                         gp.setScoreB(gp.getScoreB() + 1);
-                        this.resetBall(); //ilock会设为1
+                        gp.computer.resetComputer();
+                        gp.player.resetStudent();
+                        Thread.sleep(1000);
+                        resetBall();
+
                     }
 
                     continue;
@@ -168,23 +177,23 @@ public class Ballclass implements Runnable {
     }
 
     //如果接到球，返回值一定大于0，是反弹球的角度，否则返回-1，代表没有接到球。
-    private float pingpongplayer(int ballx, int playx, int playwidth, float sigmax, int speed) {
+    private float pingpongplayer(int ballx, int playx, int playwidth, float sigmax1, int speed) {
 
         int ballCenterx = ballx + diameter / 2;
 
         //增加娱乐性，上下碰撞会增加速度，但不超过最大速度
         if (speed < maxSpeed) {
-            speed = speed + speedStep;
+            this.speed = speed + speedStep;
         }
         if (speed > maxSpeed) {
-            speed = maxSpeed;
+            this.speed = maxSpeed;
         }
 
         float iresult = 0;
         //调整下左边界，增加一个球半径接球距离
         if (ballCenterx >= (playx - diameter / 2) && ballCenterx < (playx + playwidth * 0.1)) {
             //左边角接球
-            speed = maxSpeed;
+            this.speed = maxSpeed;
             System.out.println("左边角接球" + gp.player.speed);
             iresult= 135 - gp.player.speed+r.nextInt(30)-15;
             if(iresult<=10) iresult=10;
@@ -194,14 +203,14 @@ public class Ballclass implements Runnable {
         if (ballCenterx >= (playx + playwidth * 0.1) && ballCenterx < (playx + playwidth * 0.4)) {
             //左边反弹接球
             System.out.println("左边反弹接球" + gp.player.speed);
-            iresult = -sigmax;
+            iresult = -sigmax1;
             if(iresult<=10) iresult=10;
             if(iresult>=170) iresult=170;
             return iresult;
         }
         if (ballCenterx >= (playx + playwidth * 0.4) && ballCenterx < (playx + playwidth * 0.5)) {
             //中左杀球
-            speed = maxSpeed;
+            this.speed = maxSpeed;
             System.out.println("中左杀球" + gp.player.speed);
             iresult= 90 - gp.player.speed+r.nextInt(30)-15;
             if(iresult<=10) iresult=10;
@@ -210,7 +219,7 @@ public class Ballclass implements Runnable {
         }
         if (ballCenterx >= (playx + playwidth * 0.5) && ballCenterx < (playx + playwidth * 0.6)) {
             //中右杀球
-            speed = maxSpeed;
+            this.speed = maxSpeed;
             System.out.println("中右杀球" + gp.player.speed);
             iresult= 90 + gp.player.speed+r.nextInt(30)-15;
             if(iresult<=10) iresult=10;
@@ -221,7 +230,7 @@ public class Ballclass implements Runnable {
         if (ballCenterx >= (playx + playwidth * 0.6) && ballCenterx < (playx + playwidth * 0.9)) {
             //右边反弹接球
             System.out.println("右边反弹接球" + gp.player.speed);
-            iresult = -sigmax;
+            iresult = -sigmax1;
             if(iresult<=10) iresult=10;
             if(iresult>=170) iresult=170;
             return iresult;
@@ -229,7 +238,7 @@ public class Ballclass implements Runnable {
         //调整下右边界，增加一个半径接球范围
         if (ballCenterx >= (playx + playwidth * 0.9) && ballCenterx <= (playx + playwidth + diameter / 2)) {
             //右边角接球
-            speed = maxSpeed;
+            this.speed = maxSpeed;
             System.out.println("右边角接球" + gp.player.speed);
             iresult= 45 + gp.player.speed+r.nextInt(30)-15;
             if(iresult<=10) iresult=10;
@@ -240,7 +249,87 @@ public class Ballclass implements Runnable {
         //没有接住球
         if (iresult == 0) {
             System.out.println("没有接住球");
-            iresult = sigmax;
+            iresult = sigmax1;
+        }
+
+
+        return iresult;
+    }
+
+    //如果接到球，返回值一定小于0，是反弹球的角度，否则返回大于0的数，代表没有接到球。
+    private float pingpongComputer(int ballX, int comX, int playwidth, float sigmax1, int speed) {
+
+        int ballCenterx = ballX + diameter / 2;
+
+        //增加娱乐性，上下碰撞会增加速度，但不超过最大速度
+        if (speed < maxSpeed) {
+            this.speed = speed + speedStep;
+        }
+        if (speed > maxSpeed) {
+            this.speed = maxSpeed;
+        }
+
+        float iresult = 0;
+        //调整下左边界，增加一个球半径接球距离
+        if (ballCenterx >= (comX - diameter / 2) && ballCenterx < (comX + playwidth * 0.1)) {
+            //左边角接球
+            this.speed = maxSpeed;
+            System.out.println("左边角接球" + gp.computer.getSpeed());
+            iresult= -135 + gp.computer.getSpeed()+r.nextInt(30)-15;
+            if(iresult<=-170) iresult=-170;
+            if(iresult>=-10) iresult=-10;
+            return iresult;
+        }
+        if (ballCenterx >= (comX + playwidth * 0.1) && ballCenterx < (comX + playwidth * 0.4)) {
+            //左边反弹接球
+            System.out.println("左边反弹接球" + gp.computer.getSpeed());
+            iresult = -sigmax1;
+            if(iresult<=-170) iresult=-170;
+            if(iresult>=-10) iresult=-10;
+            return iresult;
+        }
+        if (ballCenterx >= (comX + playwidth * 0.4) && ballCenterx < (comX + playwidth * 0.5)) {
+            //中左杀球
+            this.speed = maxSpeed;
+            System.out.println("中左杀球" + gp.computer.getSpeed());
+            iresult= -90 + gp.computer.getSpeed()+r.nextInt(30)-15;
+            if(iresult<=-170) iresult=-170;
+            if(iresult>=-10) iresult=-10;
+            return iresult;
+        }
+        if (ballCenterx >= (comX + playwidth * 0.5) && ballCenterx < (comX + playwidth * 0.6)) {
+            //中右杀球
+            this.speed = maxSpeed;
+            System.out.println("中右杀球" + gp.computer.getSpeed());
+            iresult= -90 - gp.computer.getSpeed()+r.nextInt(30)-15;
+            if(iresult<=-170) iresult=-170;
+            if(iresult>=-10) iresult=-10;
+            return iresult;
+
+        }
+        if (ballCenterx >= (comX + playwidth * 0.6) && ballCenterx < (comX + playwidth * 0.9)) {
+            //右边反弹接球
+            System.out.println("右边反弹接球" + gp.computer.getSpeed());
+            iresult = -sigmax1;
+            if(iresult<=-170) iresult=-170;
+            if(iresult>=-10) iresult=-10;
+            return iresult;
+        }
+        //调整下右边界，增加一个半径接球范围
+        if (ballCenterx >= (comX + playwidth * 0.9) && ballCenterx <= (comX + playwidth + diameter / 2)) {
+            //右边角接球
+            this.speed = maxSpeed;
+            System.out.println("右边角接球" + gp.computer.getSpeed());
+            iresult= -45 - gp.computer.getSpeed()+r.nextInt(30)-15;
+            if(iresult<=-170) iresult=-170;
+            if(iresult>=-10) iresult=-10;
+            return iresult;
+        }
+
+        //没有接住球
+        if (iresult == 0) {
+            System.out.println("没有接住球");
+            iresult = sigmax1;
         }
 
 

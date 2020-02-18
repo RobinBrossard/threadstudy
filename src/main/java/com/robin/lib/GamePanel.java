@@ -8,13 +8,7 @@ import java.awt.event.KeyListener;
 public class GamePanel extends JPanel implements Runnable {
 
 
-    private int PlayA_x; //机器人左上角横坐标
-    private int PlayA_y; //机器人左上角纵坐标
 
-
-    public void setPlayA_x(int playA_x) {
-        PlayA_x = playA_x;
-    }
 
 
     final public static int playerwidth = 80;
@@ -54,6 +48,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     Ballclass ball;
     StudentAI player;
+    ComputerAI computer;
 
 
     public GamePanel() throws InterruptedException//构造函数，初始化各个变量
@@ -67,9 +62,11 @@ public class GamePanel extends JPanel implements Runnable {
             ball = new Ballclass(this);
         }
 
-        //初始位置，机器人
-        PlayA_x = playgroundwidth / 2 - playerwidth / 2 - 1;
-        PlayA_y = bordlinehigh - 1;
+        //初始机器人
+        if(computer==null){
+            computer=new ComputerAI(this);
+        }
+
 
         //初始化玩家
         if (player == null) {
@@ -84,23 +81,25 @@ public class GamePanel extends JPanel implements Runnable {
         super.paint(g); //调用父类清屏，不然不会清屏
         //TODO: 画小球
         g.setColor(Color.BLUE);//设置画笔颜色为蓝色
-        //小球轨迹计算中，会锁住
-
-           g.fillOval(ball.getX(), ball.getY(), Ballclass.diameter, Ballclass.diameter);//调用画圆的方法绘制小球
+        g.fillOval(ball.getX(), ball.getY(), Ballclass.diameter, Ballclass.diameter);//调用画圆的方法绘制小球
 
         //TODO: 画机器人A
         g.setColor(Color.RED);
-        g.fillRect(PlayA_x, PlayA_y, playerwidth, playerhigh);
+        g.fillRect(computer.getX(), computer.getY(), playerwidth, playerhigh);
 
         //TODO: 画玩家
         g.setColor(Color.YELLOW);
         g.fillRect(player.x, player.y, playerwidth, playerhigh);
 
         //TODO: 显示比分
-        g.setColor(Color.WHITE);
         Font font = new Font(null, Font.BOLD, 30);
         g.setFont(font);
-        g.drawString(scoreA + ":" + scoreB, playgroundwidth / 2 - 20, playgroundhigh / 2);
+        g.setColor(Color.YELLOW);
+        g.drawString("Player "+scoreA , playgroundwidth / 2 - 100-String.valueOf(getScoreA()).length()*20, playgroundhigh / 2);
+        g.setColor(Color.WHITE);
+        g.drawString( ":" , playgroundwidth / 2, playgroundhigh / 2);
+        g.setColor(Color.RED);
+        g.drawString(scoreB+" Computer", playgroundwidth / 2 +20, playgroundhigh / 2);
 
     }
 
