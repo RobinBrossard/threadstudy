@@ -30,7 +30,7 @@ public class Ballgame {
         f.add(mp, BorderLayout.CENTER);
         f.setVisible(true);
         f.pack();
-        new Thread(mp).start();
+      //  new Thread(mp).start();
 
         //增加frame的键盘监听
         f.addKeyListener(mp.player);

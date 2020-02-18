@@ -7,6 +7,18 @@ import java.io.IOException;
 
 public class StudentAI extends PersonalAI implements KeyListener {
 
+    int x;
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    int y;
+
     final static int minspeed = 0;
     final static int maxspeed = 10;
     final static int speedstep = 5;
