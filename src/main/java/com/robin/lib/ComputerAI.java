@@ -47,6 +47,7 @@ public class ComputerAI extends PersonalAI implements Runnable {
     final static int minspeed = 0;
     final static int maxspeed = 10;
     final static int speedstep = 5;
+    final static int comDifficult=8;
     private GamePanel gp; //游戏盒子指针，用于数据传递
     private Thread t;
 
@@ -71,7 +72,7 @@ public class ComputerAI extends PersonalAI implements Runnable {
         int diffX=0;
         while (true){
             try {
-                Thread.sleep(GamePanel.sleeptime*20); //调整计算机思考时间
+                Thread.sleep(GamePanel.sleeptime*comDifficult); //调整计算机思考时间
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
