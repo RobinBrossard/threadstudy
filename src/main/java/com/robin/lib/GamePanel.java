@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.ImageObserver;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -49,6 +50,9 @@ public class GamePanel extends JPanel implements Runnable {
     Ballclass ball;
     StudentAI player;
     ComputerAI computer;
+    ImageIcon icon;
+    Image ballimg,computerimg,playerimg,playgroundimg;
+
 
 
     public GamePanel() throws InterruptedException//构造函数，初始化各个变量
@@ -71,17 +75,39 @@ public class GamePanel extends JPanel implements Runnable {
         //初始化玩家
         if (player == null) {
             player = new StudentAI(this);
-
         }
+
+        //读取图像
+
+        icon=new ImageIcon("./src/main/resources/playground.jpg");
+        System.out.println(System.getProperty("user.dir"));
+        playgroundimg=icon.getImage();
+        icon=new ImageIcon("./src/main/resources/ball.png");
+        ballimg=icon.getImage();
+
+
+
+
+
+
+
+
+
+
+
 
 
     }
 
     public void paint(Graphics g) {
         super.paint(g); //调用父类清屏，不然不会清屏
+        //画球场
+        g.drawImage(playgroundimg, 0, 0,this.getWidth(), this.getHeight(), this);
+
         //TODO: 画小球
         g.setColor(Color.BLUE);//设置画笔颜色为蓝色
-        g.fillOval(ball.getX(), ball.getY(), Ballclass.diameter, Ballclass.diameter);//调用画圆的方法绘制小球
+      //  g.fillOval(ball.getX(), ball.getY(), Ballclass.diameter, Ballclass.diameter);//调用画圆的方法绘制小球
+        g.drawImage(ballimg,ball.getX(),ball.getY(),Ballclass.diameter, Ballclass.diameter,this);
 
         //TODO: 画机器人A
         g.setColor(Color.RED);
