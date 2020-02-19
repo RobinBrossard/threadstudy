@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="pictureresource">
+    <output-path>$PROJECT_DIR$/out/artifacts/Pingponggame_jar</output-path>
+    <root id="root">
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/ball.png" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/playground.jpg" />
+    </root>
+  </artifact>
+</component>
