@@ -3,10 +3,7 @@ package com.robin.lib;
 import javax.swing.*;
 import java.awt.*;
 
-public class GamePanel extends JPanel implements Runnable {
-
-
-
+public class GamePanel extends JPanel {
 
 
     final public static int playerwidth = 80;
@@ -48,8 +45,7 @@ public class GamePanel extends JPanel implements Runnable {
     StudentAI player;
     ComputerAI computer;
     ImageIcon icon;
-    Image ballimg,computerimg,playerimg,playgroundimg;
-
+    Image ballimg, computerimg, playerimg, playgroundimg;
 
 
     public GamePanel() throws InterruptedException//构造函数，初始化各个变量
@@ -64,8 +60,8 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         //初始机器人
-        if(computer==null){
-            computer=new ComputerAI(this);
+        if (computer == null) {
+            computer = new ComputerAI(this);
         }
 
 
@@ -75,23 +71,19 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         //读取图像
-
-        icon=new ImageIcon("./src/main/resources/playground.jpg");
         System.out.println(System.getProperty("user.dir"));
-        playgroundimg=icon.getImage();
-        icon=new ImageIcon("./src/main/resources/ball.png");
-        ballimg=icon.getImage();
+        icon = new ImageIcon("./src/main/resources/playground.jpg");
+        if(icon.getIconWidth()==-1){
+            icon = new ImageIcon("playground.jpg");
+        }
 
+        playgroundimg = icon.getImage();
+        icon = new ImageIcon("./src/main/resources/ball.png");
+        if(icon.getIconWidth()==-1){
+            icon = new ImageIcon("ball.png");
+        }
 
-
-
-
-
-
-
-
-
-
+        ballimg = icon.getImage();
 
 
     }
@@ -99,12 +91,12 @@ public class GamePanel extends JPanel implements Runnable {
     public void paint(Graphics g) {
         super.paint(g); //调用父类清屏，不然不会清屏
         //画球场
-        g.drawImage(playgroundimg, 0, 0,this.getWidth(), this.getHeight(), this);
+        g.drawImage(playgroundimg, 0, 0, this.getWidth(), this.getHeight(), this);
 
         //TODO: 画小球
         g.setColor(Color.BLUE);//设置画笔颜色为蓝色
-      //  g.fillOval(ball.getX(), ball.getY(), Ballclass.diameter, Ballclass.diameter);//调用画圆的方法绘制小球
-        g.drawImage(ballimg,ball.getX(),ball.getY(), Ballclass.diameter, Ballclass.diameter,this);
+        //  g.fillOval(ball.getX(), ball.getY(), Ballclass.diameter, Ballclass.diameter);//调用画圆的方法绘制小球
+        g.drawImage(ballimg, ball.getX(), ball.getY(), Ballclass.diameter, Ballclass.diameter, this);
 
         //TODO: 画机器人A
         g.setColor(Color.RED);
@@ -118,33 +110,12 @@ public class GamePanel extends JPanel implements Runnable {
         Font font = new Font(null, Font.BOLD, 30);
         g.setFont(font);
         g.setColor(Color.YELLOW);
-        g.drawString("Player "+scoreA , playgroundwidth / 2 - 100-String.valueOf(getScoreA()).length()*20, playgroundhigh / 2);
+        g.drawString("Player " + scoreA, playgroundwidth / 2 - 100 - String.valueOf(getScoreA()).length() * 20, playgroundhigh / 2);
         g.setColor(Color.WHITE);
-        g.drawString( ":" , playgroundwidth / 2, playgroundhigh / 2);
+        g.drawString(":", playgroundwidth / 2, playgroundhigh / 2);
         g.setColor(Color.RED);
-        g.drawString(scoreB+" Computer", playgroundwidth / 2 +20, playgroundhigh / 2);
+        g.drawString(scoreB + " Computer", playgroundwidth / 2 + 20, playgroundhigh / 2);
 
-    }
-
-    public  void gameLoop() throws InterruptedException//该方法用来动态改变小球的坐标，并对小球进行重绘
-    {
-        try {
-            while (true) {
-                Thread.sleep(sleeptime);
-                repaint();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void run() {
-        try {
-            gameLoop();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
 }

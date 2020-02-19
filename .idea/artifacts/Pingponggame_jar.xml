@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Pingponggame:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Pingponggame_jar</output-path>
+    <root id="archive" name="Pingponggame.jar">
+      <element id="module-output" name="Pingponggame" />
+    </root>
+  </artifact>
+</component>
